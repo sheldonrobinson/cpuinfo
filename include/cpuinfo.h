@@ -355,6 +355,12 @@ enum cpuinfo_uarch {
 	cpuinfo_uarch_sunny_cove = 0x0010020C,
 	/** Intel Willow Cove microarchitecture (10 nm, Tiger Lake). */
 	cpuinfo_uarch_willow_cove = 0x0010020D,
+	/** Intel Golden Cove microarchitecture (Sapphire Rapids). */
+	cpuinfo_uarch_golden_cove = 0x0010020E,
+	/** Intel Raptor Cove microarchitecture (Emerald Rapids). */
+	cpuinfo_uarch_raptor_cove = 0x0010020F,
+	/** Intel Redwood Cove microarchitecture (Granite Rapids). */
+	cpuinfo_uarch_redwood_cove = 0x00100210,
 
 	/** Pentium 4 with Willamette, Northwood, or Foster cores. */
 	cpuinfo_uarch_willamette = 0x00100300,
@@ -431,6 +437,8 @@ enum cpuinfo_uarch {
 	cpuinfo_uarch_zen4 = 0x0020010C,
 	/** AMD Zen 5 microarchitecture. */
 	cpuinfo_uarch_zen5 = 0x0020010D,
+	/** AMD Zen 6 microarchitecture. */
+	cpuinfo_uarch_zen6 = 0x0020010E,
 
 	/** NSC Geode and AMD Geode GX and LX. */
 	cpuinfo_uarch_geode = 0x00200200,
@@ -517,6 +525,8 @@ enum cpuinfo_uarch {
 	cpuinfo_uarch_cortex_a510 = 0x00300551,
 	/** ARM Cortex-A520. */
 	cpuinfo_uarch_cortex_a520 = 0x00300552,
+	/** ARM Cortex-A320. */
+	cpuinfo_uarch_cortex_a320 = 0x00300553,
 	/** ARM Cortex-A710. */
 	cpuinfo_uarch_cortex_a710 = 0x00300571,
 	/** ARM Cortex-A715. */
@@ -525,6 +535,15 @@ enum cpuinfo_uarch {
 	cpuinfo_uarch_cortex_a720 = 0x00300573,
 	/** ARM Cortex-A725. */
 	cpuinfo_uarch_cortex_a725 = 0x00300574,
+
+	/** ARM Lumex-C1-Ultra. */
+	cpuinfo_uarch_lumex_c1_ultra = 0x00300600,
+	/** ARM Lumex-C1-Premium. */
+	cpuinfo_uarch_lumex_c1_premium = 0x00300601,
+	/** ARM Lumex-C1-Pro. */
+	cpuinfo_uarch_lumex_c1_pro = 0x00300602,
+	/** ARM Lumex-C1-Nano. */
+	cpuinfo_uarch_lumex_c1_nano = 0x00300603,
 
 	/** Qualcomm Scorpion. */
 	cpuinfo_uarch_scorpion = 0x00400100,
@@ -2215,6 +2234,12 @@ struct cpuinfo_riscv_isa {
 	bool c;
 	/* Vector Extension. */
 	bool v;
+
+	/* ISA Extensions */
+	/* Half-Precision Floating-Point Extension. */
+	bool zfh;
+	/* Half-Precision Floating-Point Vector Extension. */
+	bool zvfh;
 };
 
 extern struct cpuinfo_riscv_isa cpuinfo_isa;
@@ -2285,6 +2310,22 @@ static inline bool cpuinfo_has_riscv_c(void) {
 static inline bool cpuinfo_has_riscv_v(void) {
 #if CPUINFO_ARCH_RISCV32 || CPUINFO_ARCH_RISCV64
 	return cpuinfo_isa.v;
+#else
+	return false;
+#endif
+}
+
+static inline bool cpuinfo_has_riscv_zfh(void) {
+#if CPUINFO_ARCH_RISCV32 || CPUINFO_ARCH_RISCV64
+	return cpuinfo_isa.zfh;
+#else
+	return false;
+#endif
+}
+
+static inline bool cpuinfo_has_riscv_zvfh(void) {
+#if CPUINFO_ARCH_RISCV32 || CPUINFO_ARCH_RISCV64
+	return cpuinfo_isa.zvfh;
 #else
 	return false;
 #endif

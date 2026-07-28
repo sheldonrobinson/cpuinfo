@@ -72,6 +72,10 @@
 #ifndef CPUFAMILY_ARM_HIDRA
 #define CPUFAMILY_ARM_HIDRA 0x1d5a87e8
 #endif
+// M5 Pro / M5 Max
+#ifndef CPUFAMILY_ARM_SOTRA
+#define CPUFAMILY_ARM_SOTRA 0xf76c5b1a
+#endif
 // A19
 #ifndef CPUFAMILY_ARM_TILOS
 #define CPUFAMILY_ARM_TILOS 0x01d7a72b
@@ -184,6 +188,12 @@ static enum cpuinfo_uarch decode_uarch(uint32_t cpu_family, uint32_t core_index,
 		case CPUFAMILY_ARM_HIDRA: /* M5 */
 			/* 10-core: 4x Tilos Everest v4 + 6x Tilos Sawtooth v4 */
 			return core_index + 6 < core_count ? cpuinfo_uarch_tilos_everest : cpuinfo_uarch_tilos_sawtooth;
+		case CPUFAMILY_ARM_SOTRA: /* M5 Pro / M5 Max */
+			/* Pro 15-core: 5x Sotra Super + 10x Sotra Performance */
+			/* Max 18-core: 6x Sotra Super + 12x Sotra Performance */
+			return (core_count > 15 ? core_index + 12 : core_index + 10) < core_count
+				? cpuinfo_uarch_sotra_super
+				: cpuinfo_uarch_sotra_performance;
 
 		default:
 			/* Use hw.cpusubtype for detection */
@@ -491,6 +501,9 @@ void cpuinfo_arm_mach_init(void) {
 	cpuinfo_isa.sme_bi32i32 = get_sys_info_by_name("hw.optional.arm.SME_BI32I32") != 0;
 	cpuinfo_isa.sme_b16b16 = get_sys_info_by_name("hw.optional.arm.FEAT_SME_B16B16") != 0;
 	cpuinfo_isa.sme_f16f16 = get_sys_info_by_name("hw.optional.arm.FEAT_SME_F16F16") != 0;
+	cpuinfo_isa.fp8 = get_sys_info_by_name("hw.optional.arm.FEAT_FP8") != 0;
+	cpuinfo_isa.f8dot = get_sys_info_by_name("hw.optional.arm.FEAT_FP8DOT4") != 0;
+	cpuinfo_isa.f8mm = get_sys_info_by_name("hw.optional.arm.FEAT_F8F32MM") != 0;
 
 	cpuinfo_isa.smelen = get_sys_info_by_name("hw.optional.arm.sme_max_svl_b");
 
